@@ -7,7 +7,7 @@
 	"type": "module",
 	"author": "Nicolas Hedger <nicolas@hedger.ch>",
 	"bin": {
-		"create-biome-repro": "dist/index.js"
+		"create-biome-repro": "index.js"
 	},
 	"files": ["templates", "dist"],
 	"scripts": {
