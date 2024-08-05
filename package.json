@@ -1,0 +1,44 @@
+{
+	"name": "@biomejs/create-biome-reproduction",
+	"publishConfig": {
+		"access": "public"
+	},
+	"version": "0.1.0",
+	"type": "module",
+	"author": "Nicolas Hedger <nicolas@hedger.ch>",
+	"bin": {
+		"create-biome-repro": "dist/index.js"
+	},
+	"files": ["templates", "dist"],
+	"scripts": {
+		"build": "tsup",
+		"typecheck": "tsc --noEmit"
+	},
+	"engines": {
+		"node": "^18.0.0 || >=20.0.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/biomejs/create-biome-reproduction.git"
+	},
+	"bugs": {
+		"url": "https://github.com/biomejs/create-biome-reproduction/issues"
+	},
+	"homepage": "https://github.com/biomejs/create-biome-reproduction#readme",
+	"license": "MIT",
+	"devDependencies": {
+		"@biomejs/biome": "1.8.3",
+		"@types/bun": "1.1.6",
+		"@types/node": "22.1.0",
+		"@types/prompts": "2.4.9",
+		"lefthook": "1.7.11",
+		"tsup": "8.2.4",
+		"typescript": "^5.5.4"
+	},
+	"dependencies": {
+		"@biomejs/version-utils": "0.4.0",
+		"kolorist": "1.8.0",
+		"ora": "8.0.1",
+		"prompts": "2.4.2"
+	}
+}
