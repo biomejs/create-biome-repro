@@ -12,6 +12,7 @@
 	"files": ["templates", "dist"],
 	"scripts": {
 		"build": "tsup",
+		"dev": "tsup --watch",
 		"typecheck": "tsc --noEmit"
 	},
 	"engines": {
