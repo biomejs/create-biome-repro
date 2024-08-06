@@ -1,12 +1,15 @@
+import { execSync } from "node:child_process";
 import { cpSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { getAllVersions, getLatestVersion } from "@biomejs/version-utils";
-import { green, reset } from "kolorist";
+import { green, red, reset } from "kolorist";
 import ora from "ora";
 import prompts, { type Answers } from "prompts";
 
 async function init() {
-	let result: Answers<"projectName" | "version" | "packageManager">;
+	let result: Answers<
+		"projectName" | "version" | "packageManager" | "publishRepo"
+	>;
 
 	const spinner = ora("Fetching versions").start();
 	const versions = await getAllVersions();
@@ -60,9 +63,32 @@ async function init() {
 					},
 				],
 			},
+			{
+				type: "select",
+				name: "publishRepo",
+				message: reset(
+					"Do you want to create a new repository on GitHub for this?",
+				),
+				choices: [
+					{
+						title: "Yes",
+						value: "yes",
+					},
+					{
+						title: "No",
+						value: "no",
+					},
+				],
+			},
 		]);
 
-		const { projectName, version, packageManager } = result;
+		const {
+			projectName,
+			version,
+			packageManager,
+			publishRepo: publishRepoRaw,
+		} = result;
+		const publishRepo = publishRepoRaw === "yes";
 
 		const cwd = process.cwd();
 		const targetDir = projectName;
@@ -82,6 +108,30 @@ async function init() {
 			join(root, "package.json"),
 			JSON.stringify(packageJson, null, "\t"),
 		);
+
+		if (publishRepo) {
+			try {
+				process.chdir(root);
+				console.log("Initializing git repository...");
+				initRepoAndCommit();
+				if (isGithubCliInstalled()) {
+					execSync(
+						"gh repo create --public --disable-wiki --disable-issues --source=.",
+						{ stdio: "inherit" },
+					);
+				} else {
+					console.log(
+						red(
+							"GitHub CLI is not installed, so we can't create the repo on GitHub for you. Install it from here: https://cli.github.com/",
+						),
+					);
+				}
+			} catch (error) {
+				console.log(red("Failed to initialize git repository"));
+			} finally {
+				process.chdir(cwd);
+			}
+		}
 
 		console.log("\nDone. Now run:\n");
 
@@ -107,6 +157,21 @@ async function init() {
 		console.error(e);
 		process.exit(1);
 	}
+}
+
+function isGithubCliInstalled() {
+	try {
+		execSync("gh");
+		return true;
+	} catch (error) {
+		return false;
+	}
+}
+
+function initRepoAndCommit() {
+	execSync("git init");
+	execSync("git add .");
+	execSync('git commit -m "Initial commit"');
 }
 
 init().catch((e) => {
