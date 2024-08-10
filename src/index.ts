@@ -109,8 +109,8 @@ async function init() {
 			JSON.stringify(packageJson, null, "\t"),
 		);
 
-		const isPublishRepo = publishRepoRaw === "yes";
-		if (isPublishRepo) {
+		const shouldPublishRepo = publishRepoRaw === "yes";
+		if (shouldPublishRepo) {
 			try {
 				process.chdir(root);
 				console.log("Initializing git repository...");
