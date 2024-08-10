@@ -88,8 +88,6 @@ async function init() {
 			packageManager,
 			publishRepo: publishRepoRaw,
 		} = result;
-		const isPublishRepo = publishRepoRaw === "yes";
-
 		const cwd = process.cwd();
 		const targetDir = projectName;
 		const root = join(cwd, targetDir);
@@ -109,6 +107,7 @@ async function init() {
 			JSON.stringify(packageJson, null, "\t"),
 		);
 
+		const isPublishRepo = publishRepoRaw === "yes";
 		if (isPublishRepo) {
 			try {
 				process.chdir(root);
