@@ -15,6 +15,8 @@ async function init() {
 	const versions = await getAllVersions();
 	spinner.succeed("Fetched versions");
 
+  const NOT_FOUND_INDEX = 0;
+
 	try {
 		result = await prompts([
 			{
@@ -36,7 +38,7 @@ async function init() {
 				initial: async () => {
 					const latestVersion = await getLatestVersion();
 					const index =
-						versions?.findIndex((version) => version === latestVersion) ?? 0;
+						versions?.findIndex((version) => version === latestVersion) ?? NOT_FOUND_INDEX;
 					return index;
 				},
 			},
