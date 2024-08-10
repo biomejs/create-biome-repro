@@ -88,7 +88,7 @@ async function init() {
 			packageManager,
 			publishRepo: publishRepoRaw,
 		} = result;
-		const publishRepo = publishRepoRaw === "yes";
+		const isPublishRepo = publishRepoRaw === "yes";
 
 		const cwd = process.cwd();
 		const targetDir = projectName;
@@ -109,7 +109,7 @@ async function init() {
 			JSON.stringify(packageJson, null, "\t"),
 		);
 
-		if (publishRepo) {
+		if (isPublishRepo) {
 			try {
 				process.chdir(root);
 				console.log("Initializing git repository...");
