@@ -15,6 +15,8 @@ async function init() {
 	const versions = await getAllVersions();
 	spinner.succeed("Fetched versions");
 
+	const NOT_FOUND_INDEX = 0;
+
 	try {
 		result = await prompts([
 			{
@@ -36,7 +38,8 @@ async function init() {
 				initial: async () => {
 					const latestVersion = await getLatestVersion();
 					const index =
-						versions?.findIndex((version) => version === latestVersion) ?? 0;
+						versions?.findIndex((version) => version === latestVersion) ??
+						NOT_FOUND_INDEX;
 					return index;
 				},
 			},
@@ -88,8 +91,6 @@ async function init() {
 			packageManager,
 			publishRepo: publishRepoRaw,
 		} = result;
-		const publishRepo = publishRepoRaw === "yes";
-
 		const cwd = process.cwd();
 		const targetDir = projectName;
 		const root = join(cwd, targetDir);
@@ -109,7 +110,8 @@ async function init() {
 			JSON.stringify(packageJson, null, "\t"),
 		);
 
-		if (publishRepo) {
+		const shouldPublishRepo = publishRepoRaw === "yes";
+		if (shouldPublishRepo) {
 			try {
 				process.chdir(root);
 				console.log("Initializing git repository...");
